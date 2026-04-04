@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/patrick/Projects/SwiftUI-Boilerplate -type f -name .*)",
+      "Bash(find /Users/patrick/Projects/SwiftUI-Boilerplate -maxdepth 2 -name README* -o -name CLAUDE* -o -name *.md)",
+      "Bash(git:*)",
+      "Bash(grep -E \"\\\\.\\(swift|plist|pbxproj|xcconfig|md\\)$\")",
+      "Bash(cd:*)",
+      "Bash(xcodebuild -scheme SwiftUI-Boilerplate -destination 'platform=iOS Simulator,id=D0B371C0-5C53-4AE2-99CD-FF6C046BD846' build)"
+    ]
+  }
+}
