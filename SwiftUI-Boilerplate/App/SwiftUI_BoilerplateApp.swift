@@ -2,7 +2,6 @@ import SwiftUI
 
 @main
 struct SwiftUI_BoilerplateApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var coordinator: AppCoordinator
 
     private let container: DependencyContainer
@@ -28,11 +27,6 @@ struct SwiftUI_BoilerplateApp: App {
             .environmentObject(coordinator)
             .onOpenURL { url in
                 coordinator.handleDeepLink(url)
-            }
-            .onReceive(NotificationCenter.default.publisher(for: .didReceiveDeepLink)) { notification in
-                if let url = notification.userInfo?["url"] as? URL {
-                    coordinator.handleDeepLink(url)
-                }
             }
             .task {
                 await coordinator.checkAuthOnLaunch()
