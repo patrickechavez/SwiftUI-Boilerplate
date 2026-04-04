@@ -1,0 +1,14 @@
+# Xcconfig — environment configs, never commit real values
+Configurations/Debug.xcconfig
+Configurations/Staging.xcconfig
+Configurations/Release.xcconfig
+
+# Xcode
+*.xcuserstate
+xcuserdata/
+DerivedData/
+*.xccheckout
+*.moved-aside
+
+# macOS
+.DS_Store

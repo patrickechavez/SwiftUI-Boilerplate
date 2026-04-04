@@ -1,0 +1,8 @@
+// Copy this file and rename it to Debug.xcconfig / Staging.xcconfig / Release.xcconfig
+// Fill in the values for your environment
+// Never commit the filled-in files — only this template is committed
+
+BASE_URL =
+API_VERSION =
+BUNDLE_ID =
+APP_NAME =
