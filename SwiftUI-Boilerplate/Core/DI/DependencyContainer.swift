@@ -6,7 +6,6 @@ final class DependencyContainer: DependencyContainerProtocol {
     // MARK: - Services
 
     private lazy var keychainService: KeychainServiceProtocol = KeychainService()
-    private lazy var deepLinkHandler: DeepLinkHandling = DeepLinkHandler()
 
     private lazy var authNetworkService: NetworkServiceProtocol = NetworkService()
 
@@ -39,10 +38,7 @@ final class DependencyContainer: DependencyContainerProtocol {
     // MARK: - App Factories
 
     func makeAppCoordinator() -> AppCoordinator {
-        AppCoordinator(
-            tokenManager: tokenManager,
-            deepLinkHandler: deepLinkHandler
-        )
+        AppCoordinator(tokenManager: tokenManager)
     }
 
     // MARK: - ViewFactory

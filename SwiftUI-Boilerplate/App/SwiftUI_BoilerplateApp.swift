@@ -25,9 +25,6 @@ struct SwiftUI_BoilerplateApp: App {
             }
             .environment(\.viewFactory, container)
             .environmentObject(coordinator)
-            .onOpenURL { url in
-                coordinator.handleDeepLink(url)
-            }
             .task {
                 await coordinator.checkAuthOnLaunch()
             }
