@@ -41,7 +41,6 @@ final class DependencyContainer: DependencyContainerProtocol {
     func makeAppCoordinator() -> AppCoordinator {
         AppCoordinator(
             tokenManager: tokenManager,
-            authRepository: authRepository,
             deepLinkHandler: deepLinkHandler
         )
     }
