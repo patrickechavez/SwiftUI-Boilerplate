@@ -47,6 +47,54 @@ final class NetworkService: NetworkServiceProtocol {
         return try decode(data: data, response: httpResponse)
     }
 
+    // Single photo — e.g. avatar, ID photo, thumbnail
+    func upload<T: Decodable>(endpoint: Endpoint, imageData: Data, fileName: String, mimeType: String) async throws -> T {
+        let image = MultipartImage(data: imageData, fileName: fileName, mimeType: mimeType, fieldName: "avatar")
+        return try await upload(endpoint: endpoint, images: [image])
+    }
+
+    // Multiple photos — e.g. post gallery, product images, listing photos
+    func upload<T: Decodable>(endpoint: Endpoint, images: [MultipartImage]) async throws -> T {
+        var urlRequest = try buildMultipartRequest(from: endpoint, images: images)
+
+        if let token = tokenProvider?.accessToken {
+            urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await session.data(for: urlRequest)
+        return try decode(data: data, response: response)
+    }
+
+    private func buildMultipartRequest(from endpoint: Endpoint, images: [MultipartImage]) throws -> URLRequest {
+        let boundary = "Boundary-\(UUID().uuidString)"
+        var components = URLComponents(url: endpoint.baseURL.appendingPathComponent(endpoint.path), resolvingAgainstBaseURL: false)
+
+        if let queryItems = endpoint.queryItems, !queryItems.isEmpty {
+            components?.queryItems = queryItems
+        }
+
+        guard let url = components?.url else { throw NetworkError.invalidURL }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = endpoint.method.rawValue
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        endpoint.headers?.forEach { request.setValue($1, forHTTPHeaderField: $0) }
+
+        var body = Data()
+        for image in images {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"\(image.fieldName)\"; filename=\"\(image.fileName)\"\r\n".data(using: .utf8)!)
+            body.append("Content-Type: \(image.mimeType)\r\n\r\n".data(using: .utf8)!)
+            body.append(image.data)
+            body.append("\r\n".data(using: .utf8)!)
+        }
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+
+        request.httpBody = body
+        return request
+    }
+
     private func buildRequest(from endpoint: Endpoint) throws -> URLRequest {
         var components = URLComponents(
             url: endpoint.baseURL.appendingPathComponent(endpoint.path),
