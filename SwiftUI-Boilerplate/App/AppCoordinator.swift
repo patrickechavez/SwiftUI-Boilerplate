@@ -35,7 +35,7 @@ final class AppCoordinator: ObservableObject {
 
     func checkAuthOnLaunch() async {
         isCheckingAuth = true
-        isAuthenticated = await tokenManager.loadStoredTokens() != nil
+        isAuthenticated = tokenManager.loadStoredTokens() != nil
         isCheckingAuth = false
     }
 }
